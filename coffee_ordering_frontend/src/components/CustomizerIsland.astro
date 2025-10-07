@@ -1,0 +1,27 @@
+---
+import './Customizer.client.ts';
+---
+<div id="customizer" class="sidebar" aria-label="Drink customizer" style="left:auto; right:0;">
+  <div class="sidebar-header">
+    <strong id="cust-name">Customize</strong>
+    <button id="cust-close" class="btn btn-ghost">Close</button>
+  </div>
+  <div class="sidebar-body">
+    <div id="cust-content" class="grid" style="grid-template-columns: 1fr; gap: 12px;">
+      <!-- dynamic -->
+    </div>
+  </div>
+  <div class="sidebar-footer" style="display:flex; align-items:center; gap: 10px;">
+    <div style="flex:1;">
+      <div class="helper">Current price</div>
+      <div id="cust-price" class="price">$0.00</div>
+    </div>
+    <button id="cust-add" class="btn btn-primary" style="flex:1;">Add to cart</button>
+  </div>
+</div>
+
+<script client:load>
+  import { mountCustomizer } from './Customizer.client.ts';
+  const root = document.getElementById('customizer');
+  if (root) mountCustomizer(root);
+</script>

@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import OrderSummaryIsland from '../components/OrderSummaryIsland.astro';
+---
+<BaseLayout title="Checkout - Ocean Coffee">
+  <div class="grid" style="grid-template-columns: 1.1fr .9fr; gap: 18px;">
+    <section class="card" style="padding: 18px;">
+      <div class="section-title">Customer Information</div>
+      <form id="checkout-form" class="grid" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div>
+          <label class="helper">Full name</label>
+          <input class="input" name="name" required placeholder="Alex Johnson"/>
+        </div>
+        <div>
+          <label class="helper">Email</label>
+          <input class="input" name="email" type="email" required placeholder="alex@example.com"/>
+        </div>
+        <div>
+          <label class="helper">Phone</label>
+          <input class="input" name="phone" type="tel" required placeholder="(555) 555-5555"/>
+        </div>
+        <div>
+          <label class="helper">Order Type</label>
+          <select class="select" name="type" id="order-type">
+            <option value="pickup">Pickup</option>
+            <option value="delivery">Delivery</option>
+          </select>
+        </div>
+        <div id="address-wrap" style="grid-column: 1 / -1; display:none;">
+          <label class="helper">Delivery address</label>
+          <input class="input" name="address" placeholder="123 Ocean Ave, Suite 10"/>
+        </div>
+        <div style="grid-column: 1 / -1;">
+          <label class="helper">Notes (optional)</label>
+          <textarea class="textarea" name="notes" rows="3" placeholder="e.g., call on arrival"></textarea>
+        </div>
+        <div style="grid-column: 1 / -1; display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+          <a href="/menu" class="btn btn-ghost">Back to Menu</a>
+          <button type="submit" class="btn btn-primary">Place order</button>
+        </div>
+      </form>
+    </section>
+
+    <section>
+      <OrderSummaryIsland />
+    </section>
+  </div>
+
+  <script>
+    const sel = (s)=>document.querySelector(s);
+    const orderType = sel('#order-type');
+    const addressWrap = sel('#address-wrap');
+    function updateAddress() {
+      const show = orderType.value === 'delivery';
+      addressWrap.style.display = show ? 'block' : 'none';
+      const input = addressWrap.querySelector('input');
+      input.required = show;
+    }
+    document.addEventListener('DOMContentLoaded', ()=>{
+      updateAddress();
+      orderType.addEventListener('change', updateAddress);
+      const form = document.getElementById('checkout-form');
+      form.addEventListener('submit', (e)=>{
+        e.preventDefault();
+        if (!form.reportValidity()) return;
+        window.dispatchEvent(new CustomEvent('place-order'));
+      });
+    });
+  </script>
+</BaseLayout>

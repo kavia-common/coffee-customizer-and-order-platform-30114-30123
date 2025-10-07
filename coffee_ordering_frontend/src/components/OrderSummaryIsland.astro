@@ -1,0 +1,24 @@
+---
+import './OrderSummary.client.ts';
+---
+<div id="order-summary-root" class="card" style="padding: 18px;">
+  <div class="section-title">Order Summary</div>
+  <div id="order-items" class="grid" style="grid-template-columns: 1fr; gap: 10px;"></div>
+  <div class="hr"></div>
+  <div style="display:flex; justify-content:space-between;">
+    <span>Subtotal</span><span id="sum-sub">$0.00</span>
+  </div>
+  <div style="display:flex; justify-content:space-between; margin-top:4px;">
+    <span class="helper">Tax (8%)</span><span id="sum-tax" class="helper">$0.00</span>
+  </div>
+  <div class="hr"></div>
+  <div style="display:flex; justify-content:space-between; font-weight:800;">
+    <span>Total</span><span id="sum-total">$0.00</span>
+  </div>
+</div>
+
+<script client:load>
+  import { mountOrderSummary } from './OrderSummary.client.ts';
+  const root = document.getElementById('order-summary-root');
+  if (root) mountOrderSummary(root);
+</script>

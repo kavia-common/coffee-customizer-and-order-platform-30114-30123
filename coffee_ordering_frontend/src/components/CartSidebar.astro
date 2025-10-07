@@ -1,0 +1,117 @@
+---
+import type { CartItem } from '../lib/types';
+---
+<aside id="cart-sidebar" class="sidebar" aria-label="Cart sidebar">
+  <div class="sidebar-header">
+    <strong>My Cart</strong>
+    <button id="cart-close" class="btn btn-ghost">Close</button>
+  </div>
+  <div id="cart-body" class="sidebar-body"></div>
+  <div class="sidebar-footer">
+    <div style="display:flex; justify-content:space-between; font-weight:700;">
+      <span>Subtotal</span><span id="subtotal">$0.00</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; margin-top:6px;">
+      <span class="helper">Tax (8%)</span><span id="tax" class="helper">$0.00</span>
+    </div>
+    <div class="hr"></div>
+    <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:800;">
+      <span>Total</span><span id="total">$0.00</span>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:12px;">
+      <a href="/checkout" class="btn btn-primary" id="checkout-btn" style="flex:1;">Checkout</a>
+      <button id="clear-cart" class="btn btn-ghost">Clear</button>
+    </div>
+  </div>
+</aside>
+
+<script>
+  import { subscribe, getState, removeItem, incrementQty, decrementQty, formatMoney, closeCart, onCartToggle, openCart, clearCart } from '../lib/store.ts';
+
+  const el = document.getElementById('cart-sidebar');
+  const body = document.getElementById('cart-body');
+  const subtotalEl = document.getElementById('subtotal');
+  const taxEl = document.getElementById('tax');
+  const totalEl = document.getElementById('total');
+  const btnClose = document.getElementById('cart-close');
+  const btnClear = document.getElementById('clear-cart');
+
+  function renderItem(item, idx) {
+    const wrap = document.createElement('div');
+    wrap.className = 'card';
+    wrap.style.padding = '12px';
+    wrap.style.display = 'grid';
+    wrap.style.gap = '6px';
+
+    const title = document.createElement('div');
+    title.style.display = 'flex';
+    title.style.justifyContent = 'space-between';
+    title.style.gap = '8px';
+    title.innerHTML = `<strong>${item.name}</strong><span class="price">${formatMoney(item.total)}</span>`;
+    wrap.appendChild(title);
+
+    const opts = document.createElement('div');
+    opts.className = 'helper';
+    opts.textContent = `${item.size}, ${item.milk}, ${item.temp}, sweet ${item.sweetness}%, ${item.addOns.join(', ') || 'no add-ons'}`;
+    wrap.appendChild(opts);
+
+    const controls = document.createElement('div');
+    controls.style.display = 'flex';
+    controls.style.justifyContent = 'space-between';
+    controls.style.alignItems = 'center';
+    controls.style.gap = '8px';
+    controls.innerHTML = `
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn btn-ghost" data-act="dec" data-idx="${idx}">-</button>
+        <span>${item.qty}</span>
+        <button class="btn btn-ghost" data-act="inc" data-idx="${idx}">+</button>
+      </div>
+      <button class="btn btn-ghost" data-act="rm" data-idx="${idx}">Remove</button>
+    `;
+    wrap.appendChild(controls);
+
+    return wrap;
+  }
+
+  function render() {
+    const { cart, subtotal, tax, total, sidebarOpen } = getState();
+    el?.classList.toggle('open', sidebarOpen);
+    if (!body) return;
+    body.innerHTML = '';
+    if (cart.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'helper';
+      empty.textContent = 'Your cart is empty. Add some drinks!';
+      body.appendChild(empty);
+    } else {
+      cart.forEach((item, idx) => body.appendChild(renderItem(item, idx)));
+    }
+    subtotalEl.textContent = formatMoney(subtotal);
+    taxEl.textContent = formatMoney(tax);
+    totalEl.textContent = formatMoney(total);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    subscribe(render);
+    onCartToggle(() => render());
+    render();
+    btnClose?.addEventListener('click', () => closeCart());
+    body?.addEventListener('click', (e) => {
+      const t = e.target;
+      if (!(t instanceof HTMLElement)) return;
+      const idx = Number(t.getAttribute('data-idx'));
+      const act = t.getAttribute('data-act');
+      if (Number.isNaN(idx) || !act) return;
+      if (act === 'inc') incrementQty(idx);
+      if (act === 'dec') decrementQty(idx);
+      if (act === 'rm') removeItem(idx);
+    });
+    btnClear?.addEventListener('click', () => clearCart());
+    window.addEventListener('place-order', () => {
+      // On successful order: clear cart and close
+      clearCart();
+      closeCart();
+      alert('Success! Your order has been placed.');
+    });
+  });
+</script>

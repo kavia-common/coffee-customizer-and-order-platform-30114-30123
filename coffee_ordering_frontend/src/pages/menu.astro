@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MenuGrid from '../components/MenuGrid.astro';
+import CustomizerIsland from '../components/CustomizerIsland.astro';
+import { drinks } from '../lib/menuData';
+---
+<BaseLayout title="Menu - Ocean Coffee">
+  <div class="card" style="padding: 18px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap: 12px;">
+      <div>
+        <div class="badge">Browse</div>
+        <h2 style="margin:6px 0 0;">Coffee Menu</h2>
+        <p class="helper">Tap a drink to customize it your way.</p>
+      </div>
+      <a href="/checkout" class="btn btn-secondary">Checkout</a>
+    </div>
+  </div>
+
+  <div style="margin-top: 16px;">
+    <MenuGrid drinks={drinks} />
+  </div>
+
+  <CustomizerIsland />
+</BaseLayout>

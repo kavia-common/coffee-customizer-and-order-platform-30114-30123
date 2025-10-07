@@ -1,0 +1,8 @@
+---
+import DrinkCard from './DrinkCard.astro';
+import type { Drink } from '../lib/types';
+const { drinks } = Astro.props as { drinks: Drink[] };
+---
+<div class="grid grid-3">
+  {drinks.map(d => <DrinkCard drink={d} />)}
+</div>

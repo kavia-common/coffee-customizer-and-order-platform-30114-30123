@@ -7,7 +7,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "npx eslint"
+    "lint": "npx eslint \"src/**/*.{ts,tsx,js,jsx,astro}\""
   },
   "dependencies": {
     "astro": "5.4.2"

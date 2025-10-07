@@ -1,11 +1,26 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MenuGrid from '../components/MenuGrid.astro';
+import { featured } from '../lib/menuData';
 ---
+<BaseLayout title="Ocean Coffee - Crafted to your taste">
+  <section class="card" style="padding: 28px; display: grid; gap: 16px; align-items: center; grid-template-columns: 1.2fr .8fr;">
+    <div>
+      <div class="badge">Ocean Professional</div>
+      <h1 style="margin: 8px 0 0; font-size: 36px;">Brewed fresh. Customized just for you.</h1>
+      <p class="helper" style="margin-top:8px;">Choose your size, milk, sweetness, and add-ons. Seamless ordering with a modern, clean design.</p>
+      <div style="display:flex; gap:10px; margin-top: 14px;">
+        <a href="/menu" class="btn btn-primary">Start ordering</a>
+        <a href="/checkout" class="btn btn-ghost">Go to checkout</a>
+      </div>
+    </div>
+    <div style="height: 220px;" class="card">
+      <div style="height:100%; border-radius: var(--radius); background: radial-gradient(160% 140% at 20% 10%, rgba(59,130,246,.15), rgba(37,99,235,.5) 60%, rgba(245,158,11,.45)); border:1px solid var(--border);"></div>
+    </div>
+  </section>
 
-<Layout>
-	<Welcome />
-</Layout>
+  <section style="margin-top: 22px;">
+    <div class="section-title">Featured</div>
+    <MenuGrid drinks={featured} />
+  </section>
+</BaseLayout>

@@ -1,0 +1,44 @@
+---
+import { getItemCount, openCart } from '../lib/store';
+const routes = [
+  { href: '/', label: 'Home' },
+  { href: '/menu', label: 'Menu' },
+  { href: '/checkout', label: 'Checkout' },
+];
+---
+<div class="brand">
+  <div class="brand-logo"></div>
+  <div>
+    <div style="font-size: 14px; color:#374151;">Ocean</div>
+    <div style="font-size: 18px;">Coffee</div>
+  </div>
+</div>
+<nav class="navlinks">
+  {routes.map(r => (
+    <a href={r.href} class={Astro.url.pathname === r.href ? 'active' : ''}>{r.label}</a>
+  ))}
+</nav>
+<button id="header-cart" class="cart-button" aria-label="Open cart">
+  <span style="display:flex; align-items:center; gap:8px;">
+    🛒 Cart
+  </span>
+  <span id="cart-badge" class="cart-badge">0</span>
+</button>
+
+<script>
+  import { subscribe, getItemCount, openCart } from '../lib/store.ts';
+
+  const badge = document.getElementById('cart-badge');
+  const btn = document.getElementById('header-cart');
+
+  function update() {
+    if (!badge) return;
+    badge.textContent = String(getItemCount());
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    update();
+    subscribe(update);
+    btn?.addEventListener('click', () => openCart());
+  });
+</script>

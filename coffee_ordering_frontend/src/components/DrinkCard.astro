@@ -1,0 +1,30 @@
+---
+import type { Drink } from '../lib/types';
+const { drink } = Astro.props as { drink: Drink };
+---
+<article class="card" style="padding: 12px; display:grid; gap:10px;">
+  <div style="border-radius: 12px; border:1px solid var(--border); overflow:hidden;">
+    <div style="height: 160px; background: radial-gradient(160% 140% at 20% 10%, rgba(59,130,246,.1), rgba(37,99,235,.35) 60%, rgba(245,158,11,.35));"></div>
+  </div>
+  <div style="display:flex; align-items:center; justify-content:space-between;">
+    <div style="display:grid; gap:4px;">
+      <strong>{drink.name}</strong>
+      <div class="helper">{drink.description}</div>
+      <div style="display:flex; gap:6px; margin-top:4px;">
+        {drink.tags.map(t => <span class="badge">{t}</span>)}
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div class="price">${drink.basePrice.toFixed(2)}</div>
+      <button class="btn btn-primary" data-id={drink.id}>Customize</button>
+    </div>
+  </div>
+</article>
+
+<script>
+  import { openCustomizer } from '../lib/store.ts';
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const btns = document.querySelectorAll('[data-id="'+{drink}.drink.id+'"]');
+    btns.forEach(b=>b.addEventListener('click', ()=> openCustomizer({ id: {drink}.drink.id })));
+  });
+</script>

@@ -1,0 +1,39 @@
+---
+import '../styles/theme.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CartSidebar from '../components/CartSidebar.astro';
+const { title = 'Ocean Coffee', description = 'Order and customize coffee online' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="header">
+      <div class="container nav">
+        <Header />
+      </div>
+    </header>
+
+    <main style="background: var(--bg-gradient); min-height: calc(100dvh - 72px - 120px);">
+      <div class="container">
+        <slot />
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <Footer />
+      </div>
+    </footer>
+
+    <CartSidebar client:load />
+  </body>
+</html>
